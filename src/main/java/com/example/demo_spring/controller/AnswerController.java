@@ -1,6 +1,8 @@
 package com.example.demo_spring.controller;
 
+import com.example.demo_spring.model.Answer;
 import com.example.demo_spring.model.Question;
+import com.example.demo_spring.repository.AnswerRepository;
 import com.example.demo_spring.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,39 +13,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/questions")
-public class QuestionController {
+@RequestMapping("/answers")
+public class AnswerController {
     @Autowired
-    QuestionRepository questionRepository;
+    AnswerRepository answerRepository;
     @PostMapping
-    public ResponseEntity save(@RequestBody Question question){
-        return new ResponseEntity(questionRepository.save(question), HttpStatus.OK);
+    public ResponseEntity save(@RequestBody Answer answer){
+        return new ResponseEntity(answerRepository.save(answer), HttpStatus.OK);
     }
     @GetMapping
     public ResponseEntity findAll(){
-        return new ResponseEntity(questionRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity(answerRepository.findAll(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity findAllById(@PathVariable Long id){
-        return new ResponseEntity(questionRepository.findById(id), HttpStatus.OK);
+        return new ResponseEntity(answerRepository.findById(id), HttpStatus.OK);
     }
     @GetMapping("/search-by-name")
     public ResponseEntity findAllByName(String key){
-        return new ResponseEntity(questionRepository.findAllByContentContains(key), HttpStatus.OK);
+        return new ResponseEntity(answerRepository.findAllByNameContains(key), HttpStatus.OK);
     }
     @PutMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable Long id, @RequestBody Question question){
-        Optional<Question> oldProduct = questionRepository.findById(id);
+    public ResponseEntity edit(@PathVariable Long id, @RequestBody Answer answer){
+        Optional<Answer> oldProduct = answerRepository.findById(id);
         if(!oldProduct.isPresent()){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        question.setId(id);
-        questionRepository.save(question);
+        answer.setId(id);
+        answerRepository.save(answer);
         return new ResponseEntity(HttpStatus.OK);
     }
     @DeleteMapping("/delete")
     public ResponseEntity delete(Long id){
-        questionRepository.deleteById(id);
+        answerRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
